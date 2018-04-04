@@ -5,19 +5,21 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var expressLayouts = require('express-ejs-layouts');
-var index = require('./routes/index');
-var users = require('./routes/user');
-var classed =require('./routes/class');
-var attend =require('./routes/attend');
-var leave =require('./routes/leave');
-var ability =require('./routes/ability');
-var info =require('./routes/info');
-var thesis = require('./routes/thesis');
-var work = require('./routes/work');
-var wages = require('./routes/wages');
-var student = require('./routes/student');
 var sqlQuery=require('./db/sqlQuery');
 var app = express();
+var route = require('./_router');
+let err = require('./error')
+// app.use('/', index);
+// app.use('/users', users);
+// app.use('/class', classed);
+// app.use('/attend', attend);
+// app.use('/leave', leave);
+// app.use("/ability",ability);
+// app.use("/info",info);
+// app.use("/thesis",thesis);
+// app.use("/work",work);
+// app.use("/wages",wages);
+// app.use("/student",student);
 global.sql=sqlQuery;
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -34,33 +36,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'src')));
-app.use('/', index);
-app.use('/users', users);
-app.use('/class', classed);
-app.use('/attend', attend);
-app.use('/leave', leave);
-app.use("/ability",ability);
-app.use("/info",info);
-app.use("/thesis",thesis);
-app.use("/work",work);
-app.use("/wages",wages);
-app.use("/student",student);
+//路由
+for (i in route){
+  app.use(i,require(route[i]))
+}
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
-});
+app.use(err['404']);
 app.set('env','production')
 // error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
+app.use(err['500']);
 
 module.exports = app;
