@@ -12,6 +12,10 @@ var attend =require('./routes/attend');
 var leave =require('./routes/leave');
 var ability =require('./routes/ability');
 var info =require('./routes/info');
+var thesis = require('./routes/thesis');
+var work = require('./routes/work');
+var wages = require('./routes/wages');
+var student = require('./routes/student');
 var sqlQuery=require('./db/sqlQuery');
 var app = express();
 global.sql=sqlQuery;
@@ -37,6 +41,10 @@ app.use('/attend', attend);
 app.use('/leave', leave);
 app.use("/ability",ability);
 app.use("/info",info);
+app.use("/thesis",thesis);
+app.use("/work",work);
+app.use("/wages",wages);
+app.use("/student",student);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');

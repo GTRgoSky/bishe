@@ -14,9 +14,7 @@
                 }
                 return Object.assign({}, loadData, infoData)
             },
-            mixins: [{
-                methods: minux
-            }],
+            mixins: [minux],
             mounted() {
                 this.echart(this.ability[0]);
             },

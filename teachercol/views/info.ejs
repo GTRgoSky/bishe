@@ -62,9 +62,7 @@
             }
             return Object.assign({}, loadData, infoData)
         },
-        mixins: [{
-            methods: minux
-        }],
+        mixins: [minux],
         mounted() {
             var Gtime = function(res){
                 var a = new Date(res);

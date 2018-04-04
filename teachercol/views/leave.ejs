@@ -130,9 +130,7 @@
             }
             return Object.assign({}, loadData, infoData)
         },
-        mixins: [{
-            methods: minux
-        }],
+        mixins: [minux],
         mounted() {
             var self = this;
             this.$Notice.open({

@@ -2,28 +2,30 @@
 var minux = {
     //框架侧边栏
     //登录
-    login(name){
-        var self  = this ;
-        this.$refs[name].validate((valid) => {
-            if (valid) {
-                this.modal_loading = true;
-                $.get("/users/login?usernum="+self.formInline.user+"&password="+self.formInline.password,item=>{
-                    if(!item.length) return this.$Message.error('账号密码错误!');
-                    setCookie({userid:item[0].userid})
-                    this.modal_loading = false;
-                    this.loginmodal = false;
-                    this.$Message.success('登录成功');
-                    reloadPage();
-                })
-            } else {
-                this.$Message.error('请按照规则填写账号密码!');
-            }
-        })
-    },
-    //退出登录
-    extLogin(){
-        removeCookie("userid");
-        reloadPage();
+    methods:{
+        login(name){
+            var self  = this ;
+            this.$refs[name].validate((valid) => {
+                if (valid) {
+                    this.modal_loading = true;
+                    $.get("/users/login?usernum="+self.formInline.user+"&password="+self.formInline.password,item=>{
+                        if(!item.length) return this.$Message.error('账号密码错误!');
+                        setCookie({userid:item[0].userid})
+                        this.modal_loading = false;
+                        this.loginmodal = false;
+                        this.$Message.success('登录成功');
+                        reloadPage();
+                    })
+                } else {
+                    this.$Message.error('请按照规则填写账号密码!');
+                }
+            })
+        },
+        //退出登录
+        extLogin(){
+            removeCookie("userid");
+            reloadPage();
+        }
     }
 }
 //公共的data
