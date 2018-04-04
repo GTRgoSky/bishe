@@ -1,0 +1,191 @@
+<!-- 考勤 -->
+<%- contentFor('page')%>
+<card dis-hover>
+    <p slot="title">考勤信息</p>
+    <i-table style="margin:50px auto" border :columns="columns2" :data="data3" @on-sort-change="test"></i-table>
+    <page :total="pageNum" show-total @on-change="page"></page>
+</card>
+<modal v-model="shensu" width="360">
+    <p slot="header" style="color:#f60;text-align:center">
+        <icon type="information-circled"></icon>
+        <span>申诉异常</span>
+    </p>
+    <div style="text-align:center">
+        <p>您的异常原因为：<span style="color:blue">{{reason}}</span></p>
+        <div style="margin-top:10px;">
+            <i-input type="textarea" v-model="shensureason" placeholder="请填写您的申诉理由"></i-input>
+        </div>
+    </div>
+    <div slot="footer">
+        <i-button type="error" size="large" long :loading="loading" @click="shensuclose">确定申诉</i-button>
+    </div>
+</modal>
+<modal v-model="shensuzhong" width="360">
+    <p slot="header" style="text-align:center">
+        <icon type="information-circled"></icon>
+        <span>申诉异常</span>
+    </p>
+    <div style="text-align:center">
+        <p>您的异常原因为：<span style="color:blue">{{reason}}</span></p>
+        <p>您的申诉的理由为：<span style="color:blue">{{shensureason}}</span></p>
+    </div>
+    <div slot="footer">
+        <i-button type="primary" size="large" long @click="shensuzhongclose">确定</i-button>
+    </div>
+</modal>
+<script>
+    var App = new Vue({
+        el: "#app",
+        data() {
+            var infoData = {
+                columns2: [
+                    {
+                        title: '日期',
+                        key: 'date'
+                    },
+                    {
+                        title: '上班打开时间',
+                        key: 'uptime',
+                    },
+                    {
+                        title: '下班打卡时间',
+                        key: 'downtime',
+                    },
+                    {
+                        title: '是否全天在岗',
+                        key: 'ifallday',
+                    },
+                    {
+                        title: '未在岗原因',
+                        key: 'reason',
+                    },
+                    {
+                        title: '操作',
+                        key: 'action',
+                        align: 'center',
+                        render: (h, params) => {
+                            var self = this;
+                            if(params.row.ifallday == "是") return;
+                            if(params.row.ifallday == '申诉中'){
+                                return h('div', [
+                                    h('i-button', {
+                                        props: {
+                                            type: 'primary',
+                                            size: 'small'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                self.shensuzhong = true;
+                                                self.reason = params.row.reason
+                                                self.shensureason = params.row.shensu
+                                            }
+                                        }
+                                    }, '申诉中'),
+                                ]);
+                            }
+                            return h('div', [
+                                h('i-button', {
+                                    props: {
+                                        type: 'error',
+                                        size: 'small'
+                                    },
+                                    style: {
+                                        marginRight: '5px'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            self.shensu = true;
+                                            self.reason = params.row.reason,
+                                            self.id = params.row.attendid
+                                        }
+                                    }
+                                }, '申诉异常'),
+                            ]);
+                        }
+                    }
+                ],
+                data3: <%- attend %>,
+                pageNum:<%- pageNum%>,
+                shensu:false,
+                shensuzhong:false,
+                loading:false,
+                reason:"",
+                shensureason:'',
+                id:null
+            }
+            return Object.assign({}, loadData, infoData)
+        },
+        mixins: [{
+            methods: minux
+        }],
+        mounted() {
+            this.washDate();
+        },
+        methods: {
+            test(column,key,order){
+                if(order=='asc'){
+                    //升序
+                }else if(order=='desc'){
+                    //降序
+                }
+            },
+            washDate(){
+                var self = this;
+                var Gtime = function(res){
+                    var a = new Date(res);
+                    var m = a.getMonth() + 1+'';
+                    var d = a.getDate()+'';
+                    return a.getFullYear()+'-'+m.padStart(2,0)+"-"+d.padStart(2,0);
+                };
+                this.data3.map(item=>{
+                    if(item.ifallday == 2){
+                        item.ifallday = '申诉中'
+                    }else if(item.ifallday == 0){
+                        item.ifallday = '否'
+                    }else{
+                        item.ifallday ='是';
+                    }
+                    item.date = Gtime(item.date);
+                });
+            },
+            //切换页码
+            page(index){
+                var self = this;
+                $.ajax({
+                    url:"/attend/page",
+                    data:{
+                        page:index
+                    },
+                    success(res){
+                        self.data3 = res;
+                        self.washDate();
+                    }
+                })
+            },
+            shensuclose () {
+                var self = this;
+                this.loading = true;
+                $.ajax({
+                    url:"/shensu",
+                    data:{
+                        id:self.id,
+                        reason:self.shensureason
+                    },
+                    success(res){
+                        self.loading = false;
+                        self.shensu = false;
+                        self.$Message.success('申诉递交成功');
+                        setTimeout(() => {
+                            location.reload();
+                        }, 500);
+                    }
+                })
+                
+            },
+            shensuzhongclose(){
+                this.shensuzhong = false;
+            }
+        }
+    })
+
+</script>

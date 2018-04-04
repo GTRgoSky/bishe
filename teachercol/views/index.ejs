@@ -1,0 +1,283 @@
+<%- contentFor('page')%>
+<style>
+        .ivu-card-head {
+            width: 120px;
+            text-align: center;
+            border: 1px solid #e9eaec;
+            border-bottom: 0;
+            border-radius: 5px;
+            z-index: 99;
+        }
+
+        .ivu-card-body {
+            border: 1px solid #e9eaec;
+        }
+
+        .ivu-card-body .ivu-card-head {
+            background: #57a3f3f0;
+            width: 100%;
+            border-radius: 0;
+        }
+
+        .new-table {
+            width: 45%;
+            display: inline-block
+        }
+
+        .new-table .article-table {
+            border: 12px solid #f6f6f6;
+            width: 100%;
+            border-bottom-width: 35px;
+        }
+    </style>
+
+    <card dis-hover :bordered="false" class="mian-card">
+        <p slot="title">课程信息</p>
+        <div v-if="classCol.length">
+            <row style="padding:20px">
+                <i-col v-for="item in classCol" span="5" offset="1" style="margin-top:20px;">
+                    <card :bordered="false">
+                        <p slot="title" style="color:white">{{item.classname}}</p>
+                        <div>
+                            <h5>上课日期:</h5>
+                            <span>{{item.date | washtime}}</span>
+                        </div>
+                        <div>
+                            <h5>开始时间:</h5>
+                            <span>{{item.starttime}}</span>
+                        </div>
+                        <div>
+                            <h5>结束时间:</h5>
+                            <span>{{item.endtime}}</span>
+                        </div>
+                    </card>
+                </i-col>
+            </row>
+        </div>
+    </card>
+
+    <card dis-hover :bordered="false" class="mian-card" style="margin-top:20px;">
+        <p slot="title">媒体信息</p>
+        <div class="new-table">
+            <card dis-hover >
+                <p slot="title" style="color:white">新闻动态</p>
+                <table class="article-table">
+                    <tbody>
+                        <tr>
+                            <td height="23" width="20" style="text-align: center;"></td>
+                            <td>
+                                <a href="//scs.zua.edu.cn/s/14/t/1144/5a/01/info88577.htm" target="_blank" class="article-list">计算机学院新生辩论赛</a>
+                            </td>
+                            <td>
+                                <div style="white-space:nowrap">2017-12-11</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td height="23" width="20" style="text-align: center;"></td>
+                            <td>
+                                <a href="//scs.zua.edu.cn/s/14/t/1144/59/2b/info88363.htm" target="_blank" class="article-list">计算机学院党总支开展“学思想、筑信念”主...</a>
+                            </td>
+                            <td>
+                                <div style="white-space:nowrap">2017-12-08</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td height="23" width="20" style="text-align: center;"></td>
+                            <td>
+                                <a href="//scs.zua.edu.cn/s/14/t/1144/59/14/info88340.htm" target="_blank" class="article-list">教工第三支部召开党员大会进行民主评议</a>
+                            </td>
+                            <td>
+                                <div style="white-space:nowrap">2017-12-08</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td height="23" width="20" style="text-align: center;"></td>
+                            <td>
+                                <a href="//scs.zua.edu.cn/s/14/t/1144/58/ac/info88236.htm" target="_blank" class="article-list">红色青春跟党走</a>
+                            </td>
+                            <td>
+                                <div style="white-space:nowrap">2017-12-06</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td height="23" width="20" style="text-align: center;"></td>
+                            <td>
+                                <a href="//scs.zua.edu.cn/s/14/t/1144/58/2a/info88106.htm" target="_blank" class="article-list">计算机学院举办第七届冬季运动会</a>
+                            </td>
+                            <td>
+                                <div style="white-space:nowrap">2017-12-03</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td height="23" width="20" style="text-align: center;"></td>
+                            <td>
+                                <a href="//scs.zua.edu.cn/s/14/t/1144/58/b1/info88241.htm" target="_blank" class="article-list">计算机学院成功举行南校区2017级新生趣味运...</a>
+                            </td>
+                            <td>
+                                <div style="white-space:nowrap">2017-12-03</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </card>
+        </div>
+        <div class="new-table" style="float:right">
+            <card dis-hover :bordered="false">
+                <p slot="title" style="color:white">通知公告</p>
+                <table class="article-table">
+                    <tbody>
+                        <tr>
+                            <td height="23" width="20" style="text-align: center;"></td>
+                            <td>
+                                <a href="//scs.zua.edu.cn/s/14/t/1144/5a/2f/info88623.htm" target="_blank" class="article-list">2017年度计算机学院高级职称推荐结果公示</a>
+                            </td>
+                            <td>
+                                <div style="white-space:nowrap">2017-12-14</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td height="23" width="20" style="text-align: center;"></td>
+                            <td>
+                                <a href="//scs.zua.edu.cn/s/14/t/1144/55/65/info87397.htm" target="_blank" class="article-list">计算机学院第八期学术沙龙活动预告</a>
+                            </td>
+                            <td>
+                                <div style="white-space:nowrap">2017-11-22</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td height="23" width="20" style="text-align: center;"></td>
+                            <td>
+                                <a href="//scs.zua.edu.cn/s/14/t/1144/52/3a/info86586.htm" target="_blank" class="article-list">计算机学院第六期学术沙龙活动预告</a>
+                            </td>
+                            <td>
+                                <div style="white-space:nowrap">2017-11-08</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td height="23" width="20" style="text-align: center;"></td>
+                            <td>
+                                <a href="//scs.zua.edu.cn/s/14/t/1144/50/7d/info86141.htm" target="_blank" class="article-list">关于举办专业综合实训班的通知</a>
+                            </td>
+                            <td>
+                                <div style="white-space:nowrap">2017-11-01</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td height="23" width="20" style="text-align: center;"></td>
+                            <td>
+                                <a href="//scs.zua.edu.cn/s/14/t/1144/53/d7/info86999.htm" target="_blank" class="article-list">计算机学院第七期学术沙龙活动预告</a>
+                            </td>
+                            <td>
+                                <div style="white-space:nowrap">2017-11-01</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td height="23" width="20" style="text-align: center;"></td>
+                            <td>
+                                <a href="//scs.zua.edu.cn/s/14/t/1144/50/7a/info86138.htm" target="_blank" class="article-list">学术沙龙活动预告</a>
+                            </td>
+                            <td>
+                                <div style="white-space:nowrap">2017-11-01</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </card>
+        </div>
+    </card>
+
+    <card dis-hover :bordered="false" class="mian-card" style="margin-top:20px;">
+        <p slot="title">科教动态</p>
+        <div class="new-table">
+            <card dis-hover >
+                <p slot="title" style="color:white">科教信息</p>
+                <table class="article-table">
+                    <tbody>
+                        <tr>
+                            <td height="23" width="20" style="text-align: center;"></td>
+                            <td>
+                                <a href="//scs.zua.edu.cn/s/14/t/1144/a/87899/info.jspy" target="_blank" class="article-list">计算机学院教学大纲(2017版)</a>
+                            </td>
+                            <td>
+                                <div style="white-space:nowrap">2017-12-01</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td height="23" width="20" style="text-align: center;"></td>
+                            <td>
+                                <a href="//scs.zua.edu.cn/s/14/t/1144/a/87898/info.jspy" target="_blank" class="article-list">2017级培养方案</a>
+                            </td>
+                            <td>
+                                <div style="white-space:nowrap">2017-12-08</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </card>
+        </div>
+        <div class="new-table" style="float:right">
+            <card dis-hover :bordered="false">
+                <p slot="title" style="color:white">团学动态</p>
+                <table class="article-table">
+                    <tbody>
+                        <tr>
+                            <td height="23" width="20" style="text-align: center;"></td>
+                            <td>
+                                <a href="//scs.zua.edu.cn/s/14/t/1144/57/59/info87897.htm" target="_blank" class="article-list">计算机学院南校区团总支学生会换届工作圆满完成</a>
+                            </td>
+                            <td>
+                                <div style="white-space:nowrap">2017-12-01</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td height="23" width="20" style="text-align: center;"></td>
+                            <td>
+                                <a href="//scs.zua.edu.cn/s/14/t/1144/56/6a/info87658.htm" target="_blank" class="article-list">计算机学院团总支学生会科技文化节工作总结会</a>
+                            </td>
+                            <td>
+                                <div style="white-space:nowrap">2017-11-28</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td height="23" width="20" style="text-align: center;"></td>
+                            <td>
+                                <a href="//scs.zua.edu.cn/s/14/t/1144/55/e9/info87529.htm" target="_blank" class="article-list">平安在我心——校园安全文化月辩论赛</a>
+                            </td>
+                            <td>
+                                <div style="white-space:nowrap">2017-11-25</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </card>
+        </div>
+    </card>
+
+    <script>
+        var App = new Vue({
+            el: "#app",
+            data() {
+                var infoData = {
+                    classCol: <%-classCol%>,
+                }
+                return Object.assign({}, loadData, infoData)
+            },
+            mixins: [{
+                methods: minux
+            }],
+            mounted() {},
+            filters: {
+                washtime(val) {
+                    var a = new Date(val);
+                    var month = a.getMonth() + 1
+                    return a.getFullYear() + "-" + month + "-" + a.getDate();
+                }
+            },
+            methods: {}
+        })
+    </script>

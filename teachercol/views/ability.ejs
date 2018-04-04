@@ -1,0 +1,74 @@
+<%- contentFor('page')%>
+    <script src='/echart/echarts.min.js'></script>
+    <style>
+
+    </style>
+    <div id="main" style="height:700px"></div>
+    <script>
+        var App = new Vue({
+            el: "#app",
+            data() {
+                var infoData = {
+                    ability: <%-ability%>,
+
+                }
+                return Object.assign({}, loadData, infoData)
+            },
+            mixins: [{
+                methods: minux
+            }],
+            mounted() {
+                this.echart(this.ability[0]);
+            },
+            methods: {
+                echart(obj) {
+                    var self = this;
+                    var myChart = echarts.init(document.getElementById('main'));
+                    var option = {
+                        title: {
+                            text: '教师能力评测图'
+                        },
+                        tooltip: {},
+                        legend: {
+                            data: ['预期值', '实际评测']
+                        },
+                        radar: {
+                            // shape: 'circle',
+                            name: {
+                                textStyle: {
+                                    color: '#fff',
+                                    backgroundColor: '#999',
+                                    borderRadius: 3,
+                                    padding: [3, 5]
+                               }
+                            },
+                            indicator: [
+                               { name: '专业知识能力(major)', max: 10000},
+                               { name: '应变能力(strain)', max: 10000},
+                               { name: '创新与问题解决能力(innovate)', max: 10000},
+                               { name: '沟通合作能力(link)', max: 10000},
+                               { name: '热忱抗压能力(resist)', max: 10000},
+                               { name: '学生关爱能力(student)', max: 10000}
+                            ]
+                        },
+                        series: [{
+                            name: '预期值 vs 实际评测',
+                            type: 'radar',
+                            data : [
+                                {
+                                    value : [9900, 9000, 9400, 9600, 9700, 9200],
+                                    name : '预期值'
+                                },
+                                 {
+                                    value : [obj.major, obj.strain, obj.innovate, obj.link, obj.resist, obj.student],
+                                    name : '实际评测'
+                                }
+                            ]
+                        }]
+                    };
+                    myChart.setOption(option);
+                    $(window).resize(myChart.resize);
+                }
+            }
+        })
+    </script>

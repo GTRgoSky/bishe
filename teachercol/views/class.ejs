@@ -1,0 +1,108 @@
+<%- contentFor('page')%>
+<link href="/component/canlder/calendar-price-jquery.css" rel="stylesheet">
+<style>
+    .ivu-card-head {
+        background: #57a3f3f0;
+    }
+    .caozuo{
+        float:right;
+        font-size:12px;
+        cursor:pointer;
+    }
+    .capricorncd-calendar-container .calendar-table-wrapper table td{
+        height: 109px;
+    }
+</style>
+<div class="calendar">
+    <div class="container">
+        <div class="capricorncd-date-detailed-settings" id="calendarTab" style="display:none"></div>
+    </div>
+</div>
+<script src='/component/canlder/calendar-price-jquery.js'></script>
+<script src='/component/canlder/calendar.js'></script>
+<script>
+    var App = new Vue({
+        el: "#app",
+        data() {
+            var infoData = {
+                classCol: <%-classCol%>,
+                oldclass:[]
+            }
+            return Object.assign({}, loadData, infoData)
+        },
+        mixins: [{
+            methods: minux
+        }],
+        mounted() {
+            var self = this;
+            //清洗时间
+            self.oldclass = self.oldclass.concat(self.classCol);
+            var calendar = new calendarExt({
+                data: self.classCol,
+                config: [
+                    {
+                        key: 'classname',
+                        name: '课程名称'
+                    },
+                    {
+                        key: 'date',
+                        name: '上课日期'
+                    },
+                    {
+                        key: 'starttime',
+                        name: '上课时间'
+                    },
+                    {
+                        key:"endtime",
+                        name:"结束时间"
+                    },
+                    {
+                        key:"address",
+                        name:"上课地址"
+                    },
+                    {
+                        key:"student",
+                        name:"上课班级"
+                    }
+                ],
+                show: [
+                    {
+                        key: 'classname',
+                        name: ''
+                    },
+                    {
+                        key: 'starttime',
+                        name: '上课时间:'
+                    },
+                    {
+                        key:"endtime",
+                        name:"结束时间:"
+                    }
+                ],
+                startDate:"2018-01-12"
+            },function(res){
+                $.ajax({
+                    url:"/class/editClass",
+                    data:{
+                        oldarr:JSON.stringify(self.oldclass),
+                        arr : JSON.stringify(res)
+                    },
+                    method:'POST',
+                    success(re){
+                        if(re.msg=='ok'){
+                            self.$Notice.open({
+                                title: '更新完成',
+                                desc: ''
+                            });
+                        }
+                    }
+                })
+                console.log(res);
+            });
+        },
+        methods: {
+
+        }
+    })
+
+</script>

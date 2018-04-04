@@ -1,0 +1,218 @@
+<%- contentFor('page')%>
+<style>
+</style>
+<card dis-hover>
+    <p slot="title" style="height:30px;">请假情况<i-button size="small" style="float:right" @click="getLeave">申请假单</i-button></p>
+    <i-table style="margin:50px auto" border :columns="columns2" :data="leave"></i-table>
+</card>
+<modal v-model="shensuzhong" width="360">
+    <p slot="header" style="text-align:center">
+        <icon type="information-circled"></icon>
+        <span>申诉异常</span>
+    </p>
+    <div style="text-align:center">
+        <p>您的异常原因为：<span style="color:blue">{{reason}}</span></p>
+        <p>您是否确定销假</p>
+    </div>
+    <div slot="footer">
+        <i-button type="primary" size="large" long @click="shensuzhongclose">确定</i-button>
+    </div>
+</modal>
+<modal v-model="shenqing" width="400">
+    <p slot="header" style="text-align:center">
+        <icon type="information-circled"></icon>
+        <span>申请假单</span>
+    </p>
+    <div>
+        <i-form :model="form" label-position="left" :label-width="70">
+            <form-item label="请假日期" prop="date">
+                <date-picker type="date" placeholder="Select date" v-model="form.date"></date-picker>
+            </form-item>
+            <form-item label="开始时间" prop="time">
+                <time-picker type="time" placeholder="Select time" v-model="form.starttime"></time-picker>
+            </form-item>
+            <form-item label="结束时间" prop="time">
+                <time-picker type="time" placeholder="Select time" v-model="form.endtime"></time-picker>
+            </form-item>
+            <form-item label="请假原因">
+                <i-input type="textarea" v-model="form.reason"></i-input>
+            </form-item>
+        </i-form>
+    </div>
+    <div slot="footer">
+        <i-button type="primary" size="large" long @click="sendLeave">确定</i-button>
+    </div>
+</modal>
+<script>
+    var App = new Vue({
+        el: "#app",
+        data() {
+            var infoData = {
+                shenqing:false,
+                reason:"",
+                shensuzhong:false,
+                yeartime:<%- nianjia %>,
+                leave:<%- leave%>,
+                id:null,
+                change:null,
+                columns2: [
+                    {
+                        title: '日期',
+                        key: 'date'
+                    },
+                    {
+                        title: '请假时间',
+                        key: 'starttime',
+                    },
+                    {
+                        title: '结束时间',
+                        key: 'endtime',
+                    },
+                    {
+                        title: '状态',
+                        key: 'ifallday',
+                    },
+                    {
+                        title: '请假原因',
+                        key: 'reason',
+                    },
+                    {
+                        title: '操作',
+                        key: 'action',
+                        align: 'center',
+                        render: (h, params) => {
+                            var self = this;
+                            if(params.row.zhuangtai == 0){
+                                return h('div', [
+                                    h('i-button', {
+                                        props: {
+                                            type: 'primary',
+                                            size: 'small'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                self.reason = params.row.reason;
+                                                self.shensuzhong = true;
+                                                self.id = params.row.leaveid;
+                                                self.change = 2;
+                                            }
+                                        }
+                                    }, '申请销假'),
+                                    h('i-button', {
+                                        props: {
+                                            type: 'success',
+                                            size: 'small'
+                                        },
+                                        style:{
+                                            'margin-left':'10px'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.$Message.success('您已确认~');
+                                                self.id = params.row.leaveid;
+                                                self.change = 1;
+                                                self.shensuzhongclose();
+                                            }
+                                        }
+                                    }, '确认'),
+                                ]);
+                            }
+                        }
+                    }
+                ],
+                form:{
+                    date:null,
+                    starttime:null,
+                    reason:"",
+                    endtime:null,
+                    zhuangtai:0
+                }
+            }
+            return Object.assign({}, loadData, infoData)
+        },
+        mixins: [{
+            methods: minux
+        }],
+        mounted() {
+            var self = this;
+            this.$Notice.open({
+                title: '年假时间提示',
+                desc: '你的年假时间还有'+self.yeartime +'天',
+                duration: 0
+            });
+            this.washDate();
+        },
+        methods: {
+            washDate(){
+                var self = this;
+                // var Gtime = function(res){
+                //     var a = new Date(res);
+                //     var m = a.getMonth() + 1+'';
+                //     var d = a.getDate()+'';
+                //     return a.getFullYear()+'-'+m.padStart(2,0)+"-"+d.padStart(2,0);
+                // };
+                this.leave = this.leave.map(item=>{
+                    if(item.zhuangtai == 2){
+                        item.ifallday = '申请销假中'
+                    }else if(item.zhuangtai == 3){
+                        item.ifallday = '已销假'
+                    }else if(item.zhuangtai == 0){
+                        item.ifallday ='未确认';
+                    }else{
+                        item.ifallday ='已确认';
+                    }
+                    return item;
+                    // item.date = Gtime(item.date);
+                });
+            },
+            shensuzhongclose(){
+                this.shensuzhong = false;
+                var self= this;
+                $.ajax({
+                    url:"/editleave",
+                    data:{
+                        id:self.id,
+                        zt:self.change
+                    },
+                    success(res){
+                        location.reload();
+                    }
+                })
+            },
+            //申请假单
+            getLeave(){
+                this.shenqing = true;
+            },
+            sendLeave(){
+                var self = this;
+                this.shenqing = false;
+                this.form.date = this.washT(self.form.date);
+                this.form.starttime = this.washtime(self.form.starttime);
+                this.form.endtime = this.washtime(self.form.endtime);
+                console.log(this.form)
+                $.ajax({
+                    url:"/leave/getleave",
+                    data:self.form,
+                    method:'POST',
+                    success(res){
+                        location.reload();
+                    }
+                })
+            },
+            washT(val){
+                if(!val) return
+                var m = val.getMonth() + 1+'';
+                var d = val.getDate()+'';
+                return val.getFullYear()+'-'+m.padStart(2,0)+"-"+d.padStart(2,0);
+            },
+            washtime(val){
+                if(!val) return
+                var h = val.getHours()+''
+                var m = val.getMinutes() + '';
+                var s = val.getSeconds()+'';
+                return h.padStart(2,0)+':'+m.padStart(2,0)+":"+s.padStart(2,0);
+            }
+        }
+    })
+
+</script>
