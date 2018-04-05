@@ -1,6 +1,6 @@
 var {router,express} = require("./common.js");
 var {isLogin} = require("../server/user.js");
-var {finduser} = require("../server/info.js");
+var {findthesis} = require("../server/thesis.js");
 
 /* GET  page. */
 router.get('/thesis', async function(req, res, next) {
@@ -10,8 +10,8 @@ router.get('/thesis', async function(req, res, next) {
         if(req.cookies.userid) {
             loginInfo = await isLogin(req.cookies.userid);
             var userid = loginInfo[0].userid;
-            useInfo = await finduser(userid);
-            res.render('thesis',{userInfo : loginInfo[0],useInfo:JSON.stringify(useInfo)});
+            let thesis = await findthesis(userid)
+            res.render('thesis',{userInfo : loginInfo[0],thesis:JSON.stringify(thesis)});
         }else{
             res.redirect('/');
         }

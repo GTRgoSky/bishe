@@ -1,16 +1,50 @@
 <%- contentFor('page')%>
-thesis
+<card dis-hover>
+    <p slot="title">发表论文统计</p>
+    <i-table :columns="columns" stripe :data="thesis"></i-able>
+</card>
 <script>
     var App = new Vue({
         el: "#app",
         data() {
             var infoData = {
-            }
+                thesis: <%-thesis%>,
+                columns:[
+                    {
+                        title:'论文题目',
+                        key:"title",
+                        width:320,
+                        render: (h, params) => {
+                            return h('a',{
+                                attrs:{
+                                    href:params.row.href,
+                                    target : '_blank'
+                                }
+                            },[
+                                h('strong', params.row.title)
+                            ]);
+                        }
+                    },{
+                        title:'发表期刊',
+                        key:"book"
+                    },{
+                        title:'论文字数',
+                        key:"page"
+                    },{
+                        title:'发表时间',
+                        key:"time"
+                    },{
+                        title:'论文网络传播量',
+                        key:"num"
+                    }
+                ]
+            };
             return Object.assign({}, loadData, infoData)
         },
         mixins: [minux],
         mounted() {
             //发表论文
+            console.log(this.thesis);
         },
         methods: {
 

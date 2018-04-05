@@ -1,11 +1,102 @@
 <%- contentFor('page')%>
-work
+<style>
+    .all td{
+        background-color: #ff6600;
+        color: #fff;
+    }
+    .ivu-table-footer div{
+        display: flex;
+        width: 100%;
+    }
+    .ivu-table-footer span{
+        display: inline-block;
+    }
+</style>
+<card dis-hover>
+    <p slot="title">教学工作量</p>
+    <i-form style="text-align: right;" :model="formItem" :label-width="80" inline>
+        <form-item prop="time"  label="查询区间">
+            <date-picker type="daterange" v-model="formItem.time" :options="options2" placement="bottom-end" placeholder="Select date" style="width: 200px;float: right;"></date-picker>
+        </form-item>
+        <form-item>
+            <i-button style="margin-left:-60px" type="primary" @click="handleSubmit">查询</i-button>
+        </form-item>
+    </i-form>
+    <Alert  type="warning">*工作量饱和度 计算公式：每天按照2个课时每课时2小时45人次</Alert>
+    <i-table disabled-hover :columns="columns" :data="workTJ">
+        <div slot="footer">
+            <span style="flex:1;padding-left:21px;">统计</span>
+            <span style="flex:6;padding-left:22px;">{{workTJ[workTJ.length - 1].clasTimeA}}</span>
+            <span style="flex:5">{{workTJ[workTJ.length - 1].clasTypeA}}</span>
+            <span style="flex:6">{{workTJ[workTJ.length - 1].studentNumA}}</span>
+            <span style="flex:5">{{workTJ[workTJ.length - 1].bhA}}</span>
+        </div>
+    </i-able>
+</card>
 <script>
     var App = new Vue({
         el: "#app",
         data() {
             var infoData = {
-            }
+                workTJ:<%-workTJ%>,
+                columns:[
+                    {
+                        type: 'index',
+                        width: 60,
+                        align: 'center'
+                    },
+                    {
+                       title:"课时统计(每节课2h)",
+                       key:"clasTime" 
+                    },
+                    {
+                       title:"班级总数(分类)",
+                       key:"clasType" 
+                    },
+                    {
+                       title:"学生总数",
+                       key:"studentNum" 
+                    },
+                    {
+                       title:"工作饱和量",
+                       key:"bh" 
+                    }
+                ],
+                options2: {
+                    shortcuts: [
+                        {
+                            text: '1 week',
+                            value () {
+                                const end = new Date();
+                                const start = new Date();
+                                start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+                                return [start, end];
+                            }
+                        },
+                        {
+                            text: '1 month',
+                            value () {
+                                const end = new Date();
+                                const start = new Date();
+                                start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+                                return [start, end];
+                            }
+                        },
+                        {
+                            text: '3 months',
+                            value () {
+                                const end = new Date();
+                                const start = new Date();
+                                start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+                                return [start, end];
+                            }
+                        }
+                    ]
+                },
+                formItem:{
+                    time:[]
+                }
+            };
             return Object.assign({}, loadData, infoData)
         },
         mixins: [minux],
@@ -13,7 +104,29 @@ work
             //发表论文
         },
         methods: {
-
+            handleSubmit(){
+                var self = this;
+                let ar = this.formItem.time.map(ele=>{
+                    let date = new Date(ele);
+                    let year = date.getFullYear()
+                    let month = (date.getMonth()+1).toString().padStart(2,0);
+                    let day = date.getDate().toString().padStart(2,0);
+                    return year + '-' + month + '-' + day;
+                })
+                if(ar.lenth < 2) return this.$Message.error('日期选择格式错误');
+                $.ajax({
+                    url:"/work/getwork",
+                    data:{
+                        startTime: ar[0],
+                        endTime : ar[1]
+                    },
+                    success(re){
+                        if(re.msg=='ok'){
+                            self.workTJ = [re.data];
+                        }
+                    }
+                })
+            }
         }
     })
 </script>
