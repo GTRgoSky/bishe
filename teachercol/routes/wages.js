@@ -1,17 +1,20 @@
 var {router,express} = require("./common.js");
 var {isLogin} = require("../server/user.js");
-var {finduser} = require("../server/info.js");
+let {selectgz} = require('../server/wages.js');
 
 /* GET  page. */
 router.get('/wages', async function(req, res, next) {
     try {
         var loginInfo = [{}];
-        var useInfo = null;
+        let date = new Date();
+        let year = date.getFullYear()
+        let month = (date.getMonth()+1).toString().padStart(2,0);
+        let Time = year + '-' + month;
         if(req.cookies.userid) {
             loginInfo = await isLogin(req.cookies.userid);
             var userid = loginInfo[0].userid;
-            useInfo = await finduser(userid);
-            res.render('wages',{userInfo : loginInfo[0],useInfo:JSON.stringify(useInfo)});
+            let selectGz = await selectgz(userid,Time);
+            res.render('wages',{userInfo : loginInfo[0],selectGz:JSON.stringify(selectGz)});
         }else{
             res.redirect('/');
         }
@@ -20,6 +23,15 @@ router.get('/wages', async function(req, res, next) {
     }
 });
 
-
+router.get('/getwages', async function(req, res, next) {
+    try {
+        var userid = req.cookies.userid;
+        let time = req.query.time;
+        let selectGz = await selectGz(userid,time);
+        res.send();
+    }catch (err){
+        console.log(err.message)
+    }
+});
 
 module.exports = router;

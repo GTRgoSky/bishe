@@ -1,16 +1,50 @@
 <%- contentFor('page')%>
-wages
+<card dis-hover>
+    <p slot="title">工资统计</p>
+    <i-table :columns="columns" stripe :data="selectGz"></i-able>
+</card>
 <script>
     var App = new Vue({
         el: "#app",
         data() {
             var infoData = {
+                selectGz:<%-selectGz%>,
+                columns:[
+                    {
+                        title:"基本工资",
+                        key:"jiben"
+                    },
+                    {
+                        title:"实发工资",
+                        key:"shifa"
+                    },
+                    {
+                        title:"个人所得税",
+                        key:"suodeshui"
+                    },
+                    {
+                        title:"五险一金",
+                        key:"wxyj"
+                    },
+                    {
+                        title:"缺勤扣款",
+                        key:"qq"
+                    },
+                    {
+                        title:"奖金",
+                        key:"jj"
+                    },
+                    {
+                        title:"时间",
+                        key:"time"
+                    }
+                ]
             }
             return Object.assign({}, loadData, infoData)
         },
         mixins: [minux],
         mounted() {
-            //发表论文
+            //工资统计
         },
         methods: {
 
