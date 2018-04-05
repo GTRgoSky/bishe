@@ -10,7 +10,7 @@ var json = {
     "/work" : './routes/work',
     "/wages" : './routes/wages',
     "/student" : './routes/student'
-}
+};
 
 
 module.exports = json
