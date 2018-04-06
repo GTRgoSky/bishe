@@ -27,8 +27,8 @@ router.get('/getwages', async function(req, res, next) {
     try {
         var userid = req.cookies.userid;
         let time = req.query.time;
-        let selectGz = await selectGz(userid,time);
-        res.send();
+        let selectGz = await selectgz(userid,time);
+        res.send(selectGz);
     }catch (err){
         console.log(err.message)
     }

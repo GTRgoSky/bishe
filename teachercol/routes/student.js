@@ -1,6 +1,6 @@
 var {router,express} = require("./common.js");
 var {isLogin} = require("../server/user.js");
-var {finduser} = require("../server/info.js");
+var {getstudent,selstudent} = require('../server/student.js');
 
 /* GET  page. */
 router.get('/student', async function(req, res, next) {
@@ -10,8 +10,8 @@ router.get('/student', async function(req, res, next) {
         if(req.cookies.userid) {
             loginInfo = await isLogin(req.cookies.userid);
             var userid = loginInfo[0].userid;
-            useInfo = await finduser(userid);
-            res.render('student',{userInfo : loginInfo[0],useInfo:JSON.stringify(useInfo)});
+            let getStu = await getstudent(userid);
+            res.render('student',{userInfo : loginInfo[0],getStu:JSON.stringify(getStu)});
         }else{
             res.redirect('/');
         }
@@ -20,6 +20,15 @@ router.get('/student', async function(req, res, next) {
     }
 });
 
-
+router.get('/getstudent', async function(req, res, next) {
+    try {
+        var userid = req.cookies.userid;
+        let type = req.query.type;
+        let selectGz = await selstudent(userid,type);
+        res.send(selectGz);
+    }catch (err){
+        console.log(err.message)
+    }
+});
 
 module.exports = router;
