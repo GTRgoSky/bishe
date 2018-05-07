@@ -10,7 +10,6 @@ function setCookie(obj){
 //用javascript删除某一个cookie的方法，该方法传入要删除cookie的名称
 function removeCookie(cookieName) {
     var cookies = document.cookie.split(";");//将所有cookie键值对通过分号分割为数组
-
     //循环遍历所有cookie键值对
     for (var i = 0; i < cookies.length; i++) {
         //有些cookie键值对前面会莫名其妙产生一个空格，将空格去掉

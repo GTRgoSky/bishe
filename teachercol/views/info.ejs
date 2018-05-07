@@ -17,7 +17,11 @@
 </style>
 <div style="margin:auto;width:50%">
     <card dis-hover style="text-align:center">
-        <p slot="title" style="height:30px;">个人详细信息<i-button size="small" style="float:right" @click="setMe">保存修改</i-button></p>
+        <p slot="title" style="height:30px;">
+            <i-button size="small" style="float:left" @click="changePass">修改密码</i-button>
+            个人详细信息
+            <i-button size="small" style="float:right" @click="setMe">保存修改</i-button>
+        </p>
         <i-form :model="info" label-position="right" :label-width="100" style="padding:0 50px;">
             <form-item label="姓名:">
                 <i-input v-model="info.username"></i-input>
@@ -51,6 +55,33 @@
             </form-item>
         </i-form>
     </card>
+    <!-- 组件功能 -->
+    <modal v-model="changpass">
+        <p slot="header" style="color:#f60;text-align:center">
+            <icon type="information-circled"></icon>
+            <span>修改密码</span>
+        </p>
+        <i-form ref="formInline" :model="formInline" :rules="ruleInline" style="width: 65%;margin: auto;">
+            <form-item prop="初始密码">
+                <i-input type="text" v-model="formInline.old" placeholder="初始密码">
+                    <icon type="ios-person-outline" slot="prepend"></icon>
+                </i-input>
+            </form-item>
+            <form-item prop="新密码">
+                <i-input type="text" v-model="formInline.passnewword" placeholder="新密码">
+                    <icon type="ios-locked-outline" slot="prepend"></icon>
+                </i-input>
+            </form-item>
+            <form-item prop="新密码确认">
+                <i-input type="text" v-model="formInline.passnewwordT" placeholder="新密码">
+                    <icon type="ios-locked-outline" slot="prepend"></icon>
+                </i-input>
+            </form-item>
+        </i-form>
+        <div slot="footer" style="width: 50%;margin: auto;">
+            <i-button type="error" size="large" long :loading="login_loading" @click="sureChange">确认修改</i-button>
+        </div>
+    </modal>
 </div>
 
 <script>
@@ -59,6 +90,12 @@
         data() {
             var infoData = {
                 info:<%- useInfo%>[0],
+                changpass:false,
+                formInline:{
+                    old:"",
+                    passnewword:"",
+                    passnewwordT:""
+                }
             }
             return Object.assign({}, loadData, infoData)
         },
@@ -87,7 +124,34 @@
                         location.reload();
                     }
                 })
-                
+            },
+            changePass(){
+                this.changpass = true;
+            },
+            sureChange(){
+                var self = this;
+                if(this.formInline.passnewword != this.formInline.passnewwordT){
+                    this.$Message.error('请保证密码一致');
+                    return;
+                }
+                if(this.formInline.passnewword.length < 6){
+                    this.$Message.error('密码不可以少于6位');
+                    return;
+                }
+                $.ajax({
+                    url:"/users/changepass",
+                    method:'POST',
+                    data:self.formInline,
+                    success(res){
+                        if(res){
+                            self.$Message.success('修改成功');
+                            self.changpass = false;
+                        }else{
+                            self.$Message.error('原始密码错误');
+                        }
+                        
+                    }
+                })
             }
         }
     })
