@@ -9,17 +9,6 @@ var sqlQuery=require('./db/sqlQuery');
 var app = express();
 var route = require('./_router');
 let err = require('./error')
-// app.use('/', index);
-// app.use('/users', users);
-// app.use('/class', classed);
-// app.use('/attend', attend);
-// app.use('/leave', leave);
-// app.use("/ability",ability);
-// app.use("/info",info);
-// app.use("/thesis",thesis);
-// app.use("/work",work);
-// app.use("/wages",wages);
-// app.use("/student",student);
 global.sql=sqlQuery;
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -45,5 +34,4 @@ app.use(err['404']);
 app.set('env','production')
 // error handler
 app.use(err['500']);
-
 module.exports = app;
